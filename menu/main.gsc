@@ -30,7 +30,26 @@ onPlayerSpawned()
 {    
     if(self isHost())
     {
-        self FreezeControls( false );
+        self thread overflowfix();
         self thread initializeSetup( 4, self );
     }
 }
+
+overflowfix()
+{
+    level.overflow       = newHudElem();
+    level.overflow.alpha = 0;
+    level.overflow setText( "marker" );
+
+    for(;;)
+    {
+        level waittill("CHECK_OVERFLOW");
+        if(level.strings.size >= 45)
+        {
+            level.overflow ClearAllTextAfterHudElem();
+            level.strings = [];
+            level notify("FIX_OVERFLOW");
+        }
+    }
+}
+

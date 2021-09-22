@@ -21,11 +21,9 @@ createText(font, fontScale, align, relative, x, y, sort, alpha, text, color, isL
         textElem thread doRainbow();
     }
 
-    //if( isint( text ) )
-    //    textElem setValue(text);
-    //else
-        textElem SetText( text );
-    textElem thread watchDeletion( self );
+    self addToStringArray(text);
+    textElem thread watchForOverFlow(text);
+    textElem thread watchDeletion( self ); 
 
     self.hud_amount++;  
     return textElem;
@@ -71,6 +69,39 @@ removeFromArray( array, text )
             new[new.size] = index;
     }      
     return new; 
+}
+
+setSafeText(text)
+{
+    self notify("stop_TextMonitor");
+    self addToStringArray(text);
+    self thread watchForOverFlow(text);
+}
+
+addToStringArray(text)
+{
+    if(!isInArray(level.strings,text))
+    {
+        level.strings[level.strings.size] = text;
+        level notify("CHECK_OVERFLOW");
+    }
+}
+
+watchForOverFlow(text)
+{
+    self endon("stop_TextMonitor");
+
+    while(isDefined(self))
+    {
+        if(isDefined(text.size))
+            self setText(text);
+        else
+        {
+            self setText(undefined);
+            self.label = text;
+        }
+        level waittill("FIX_OVERFLOW");
+    }
 }
 
 getName()
