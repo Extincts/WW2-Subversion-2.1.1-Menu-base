@@ -1,0 +1,1 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Project><Title>Subversion</Title><Author>Extinct</Author><Game>WW2</Game><Mode>MP</Mode><Platform /><Symbols>DEBUG;EXAMPLE</Symbols></Project>
